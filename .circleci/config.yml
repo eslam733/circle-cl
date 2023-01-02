@@ -24,7 +24,7 @@ jobs:
       - checkout
       - run:
           name : "say hello world"
-          command: "echo hello world" <<MY_NAME>>
+          command: "echo hello world $MY_NAME"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
