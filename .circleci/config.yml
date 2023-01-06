@@ -21,6 +21,9 @@ jobs:
           root: ~/
           paths:
             - output.txtsa
+      - run:
+          command: curl https://kvdb.io/9AMxKePPuzpetm6LmwRmR7/logs  -d 'non zero returns'
+          when: on_fail
   get-file:
     <<: *default
     steps:
