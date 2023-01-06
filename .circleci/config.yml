@@ -1,45 +1,27 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-
-default: &default
-    docker:
-    - image: cimg/base:stable
-
+# Use a package of configuration called an orb.
+orbs:
+  # Choose either one of the orbs below
+  # welcome: circleci/welcome-orb@0.4.1
+  # aws-cli: circleci/aws-cli@2.0.3
+# Define the jobs we want to run for this project
 jobs:
-  save-file:
-    <<: *default
+  create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
     steps:
-      - checkout
+      - checkout # check out the code in the project directory
       - run:
-          name: "create file"
-          command: echo "text to output here" > ~/output.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - output.txt
-      - run:
-          command: curl https://kvdb.io/9AMxKePPuzpetm6LmwRmR7/logs  -d 'non zero returns'
-          when: on_fail
-  get-file:
-    <<: *default
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt
-      - run:
-          command: curl https://kvdb.io/9AMxKePPuzpetm6LmwRmR7/logs  -d 'non zero returns'
-          when: on_fail
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --region us-east-1
+# Sequential workflow
 workflows:
-  say-hello-workflow:
+  # Name the workflow
+  myWorkflow:
     jobs:
-      - save-file
-      - get-file:
-          requires:
-            - save-file
+      - create_infrastructure
+      # - myjob2

@@ -1,0 +1,45 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+
+default: &default
+    docker:
+    - image: cimg/base:stable
+
+jobs:
+  save-file:
+    <<: *default
+    steps:
+      - checkout
+      - run:
+          name: "create file"
+          command: echo "text to output here" > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt
+      - run:
+          command: curl https://kvdb.io/9AMxKePPuzpetm6LmwRmR7/logs  -d 'non zero returns'
+          when: on_fail
+  get-file:
+    <<: *default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/output.txt
+      - run:
+          command: curl https://kvdb.io/9AMxKePPuzpetm6LmwRmR7/logs  -d 'non zero returns'
+          when: on_fail
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  say-hello-workflow:
+    jobs:
+      - save-file
+      - get-file:
+          requires:
+            - save-file
