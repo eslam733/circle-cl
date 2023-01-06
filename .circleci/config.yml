@@ -14,7 +14,7 @@ jobs:
           name: "create file"
           command: echo "text to output here" > output.txt
       - persist_to_workspace:
-          root: /tmp/dir
+          root: /
           paths:
             - output.txt
   # say-hello-world:
