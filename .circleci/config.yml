@@ -20,7 +20,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - output.txtsa
+            - output.txt
       - run:
           command: curl https://kvdb.io/9AMxKePPuzpetm6LmwRmR7/logs  -d 'non zero returns'
           when: on_fail
