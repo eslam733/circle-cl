@@ -18,8 +18,8 @@ jobs:
           command: ls
       - persist_to_workspace:
           root: output.text
-          # paths:
-          #   - output.txt
+          paths:
+            - /
   # say-hello-world:
   #   docker:
   #     - image: cimg/base:stable
