@@ -4,10 +4,14 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+
+default: &default
+    docker:
+    - image: cimg/base:stable
+
 jobs:
   save-file:
-    docker:
-      - image: cimg/base:stable
+    << default
     steps:
       - checkout
       - run:
@@ -18,8 +22,7 @@ jobs:
           paths:
             - output.txt
   get-file:
-    docker:
-      - image: cimg/base:stable
+    << default
     steps:
       - checkout
       - attach_workspace:
