@@ -11,7 +11,7 @@ default: &default
 
 jobs:
   save-file:
-    << default
+    <<: *default
     steps:
       - checkout
       - run:
@@ -22,7 +22,7 @@ jobs:
           paths:
             - output.txt
   get-file:
-    << default
+    <<: *default
     steps:
       - checkout
       - attach_workspace:
