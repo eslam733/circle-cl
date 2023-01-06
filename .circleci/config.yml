@@ -16,7 +16,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - output.txt
+            - /home/circleci/output.txt
   get-file:
     docker:
       - image: cimg/base:stable
