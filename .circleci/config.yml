@@ -13,28 +13,24 @@ jobs:
       - run:
           name: "create file"
           command: echo "text to output here" > output.txt
-      - run:
-          name: "create file2"
-          command: ls
       - persist_to_workspace:
-          root: output.text
+          root: ~/
           paths:
-            - /
-  # say-hello-world:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name : "save file"
-  #         command: "echo hello world $MY_NAME"
-
+            - output.txt
+  get-file:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/output.txt
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
       - save-file
-      # - say-hello-world:
-      #     requires:
-      #       - say-hello
+      - get-file:
+          requires:
+            - save-file
